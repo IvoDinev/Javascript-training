@@ -9,16 +9,22 @@ GAME RULES:
 
 */
 var totalScore, currentScore, currentUser, gamePlaying;
+sixesCount = 0;
 
 initGame();
 
+// change player
 function switchUser() {
   document.querySelector('.player-0-panel').classList.toggle('active');
   document.querySelector('.player-1-panel').classList.toggle('active');
   document.querySelector('.dice').style.display = 'none';
   currentUser === 0 ? (currentUser = 1) : (currentUser = 0);
+  sixesCount = 0;
 }
 
+/* start new game
+  All scores are set to 0, dice is hidden, gamePlaying shows that the game is started, player 1 is set to active, names are set to Player 1 and Player 2
+*/
 function initGame() {
   gamePlaying = true;
   document.querySelector('.dice').style.display = 'none';
@@ -26,6 +32,7 @@ function initGame() {
   document.getElementById('current-0').textContent = 0;
   document.getElementById('score-1').textContent = 0;
   document.getElementById('current-1').textContent = 0;
+  sixesCount = 0;
   totalScore = [0, 0];
   currentScore = 0;
   currentUser = 0;
@@ -45,6 +52,7 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     diceDOM = document.querySelector('.dice');
     diceDOM.src = 'dice-' + dice + '.png';
     document.querySelector('.dice').style.display = 'block';
+    //switch turns and delete current score if 1 is thrown
     if (dice === 1) {
       currentScore = 0;
       document.querySelector(
@@ -52,6 +60,26 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
       ).textContent = currentScore;
       switchUser();
     } else {
+      //if six is thrown increase the consetuvive sixes count
+      if (dice === 6) {
+        sixesCount++;
+        //check if dice === 6 for 2 consecutive times and delete the total score
+        if (sixesCount === 2) {
+          currentScore = 0;
+          totalScore[currentUser] = 0;
+          document.querySelector(
+            '#current-' + currentUser
+          ).textContent = currentScore;
+          document.querySelector('#score-' + currentUser).textContent =
+            totalScore[currentUser];
+          switchUser();
+          return;
+        }
+      }
+      //if dice != 6 start counting from the beginning
+      else {
+        sixesCount = 0;
+      }
       currentScore += dice;
       document.querySelector(
         '#current-' + currentUser
@@ -62,10 +90,12 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 
 //pressing hold button
 document.querySelector('.btn-hold').addEventListener('click', function() {
+  //check if game is not finished
   if (gamePlaying) {
     totalScore[currentUser] += currentScore;
     document.querySelector('#score-' + currentUser).textContent =
       totalScore[currentUser];
+    //check if player wins
     if (totalScore[currentUser] >= 100) {
       gamePlaying = false;
       document.querySelector('#name-' + currentUser).textContent = 'Winner !';
