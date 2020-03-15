@@ -96,7 +96,14 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     document.querySelector('#score-' + currentUser).textContent =
       totalScore[currentUser];
     //check if player wins
-    if (totalScore[currentUser] >= 100) {
+    var input = document.querySelector('.winningPoints').value;
+    var winningPoints;
+    if (input) {
+      winningPoints = input;
+    } else {
+      winningPoints = 100;
+    }
+    if (totalScore[currentUser] >= winningPoints) {
       gamePlaying = false;
       document.querySelector('#name-' + currentUser).textContent = 'Winner !';
       document.querySelector('.dice').style.display = 'none';
@@ -115,6 +122,8 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     }
   }
 });
+
+//changing the winning points
 
 //pressing the new game button
 document.querySelector('.btn-new').addEventListener('click', initGame);
