@@ -1,21 +1,20 @@
-var budgetController = (function() {
-
-    var Expense = function(id, description, value) {
+var budgetController = (function () {
+    var Expense = function (id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
     };
 
-    var Income = function(id, description, value) {
+    var Income = function (id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
-    };    
+    };
 
     var data = {
         allItems: {
             exp: [],
-            inc: []           
+            inc: []
         },
         totals: {
             exp: 0,
@@ -24,23 +23,20 @@ var budgetController = (function() {
     };
 
     return {
-        addItem: function(type, des, val) {
+        addItem: function (type, des, val) {
             var newItem, ID;
 
             //create new ID
             if (data.allItems[type].length > 0) {
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
-            }
-            else {
+            } else {
                 ID = 0;
             }
 
-
             //create new item based the type
-            if (type === 'exp') {
+            if (type === "exp") {
                 newItem = new Expense(ID, des, val);
-            }
-            else if (type === 'inc') {
+            } else if (type === "inc") {
                 newItem = new Income(ID, des, val);
             }
 
@@ -49,52 +45,67 @@ var budgetController = (function() {
 
             //return the new element;
             return newItem;
-        },
+        }
     };
-    
 })();
 
 //UI controller
-var UIController = (function() {
-
+var UIController = (function () {
     var DOMstrings = {
-        inputType: '.add__type',
-        inputDescription: '.add__description',
-        inputValue: '.add__value',
-        inputBtn: '.add__btn'
+        inputType: ".add__type",
+        inputDescription: ".add__description",
+        inputValue: ".add__value",
+        inputBtn: ".add__btn"
     };
 
     return {
-        getInput: function() {
+        getInput: function () {
             return {
                 type: document.querySelector(DOMstrings.inputType).value, //inc or exp
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: document.querySelector(DOMstrings.inputValue).value
-            };          
+            };
         },
 
-        getDOMstrings: function() {
+        addListItem: function (obj, type) {
+            //Create HTML string with placeholder text
+            <div class="item clearfix" id="income-0">
+                <div class="item__description">Salary</div>
+                <div class="right clearfix">
+                    <div class="item__value">+ 2,100.00</div>
+                    <div class="item__delete">
+                        <button class="item__delete--btn">
+                            <i class="ion-ios-close-outline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>;
+            //Replace the placeholder with some actual data
+
+            //Insert HTML into the DOM
+        },
+
+        getDOMstrings: function () {
             return DOMstrings;
         }
-    }
+    };
 })();
 
 //Global app controller
-var controller = (function(budgetCtrl, UICtrl) {
-
-    var setupEventListeners = function() {
+var controller = (function (budgetCtrl, UICtrl) {
+    var setupEventListeners = function () {
         var DOM = UICtrl.getDOMstrings();
 
-        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);   
-    
-        document.addEventListener('keypress', function(event) {
+        document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
+
+        document.addEventListener("keypress", function (event) {
             if (event.keyCode === 13 || event.which === 13) {
                 ctrlAddItem();
             }
-        });    
-    };    
+        });
+    };
 
-    var ctrlAddItem = function() {
+    var ctrlAddItem = function () {
         var input, newItem;
 
         //1. Get the field input data
@@ -109,12 +120,11 @@ var controller = (function(budgetCtrl, UICtrl) {
     };
 
     return {
-        init: function() {
-            console.log('Start');
+        init: function () {
+            console.log("Start");
             setupEventListeners();
         }
     };
-    
 })(budgetController, UIController);
 
 controller.init();
